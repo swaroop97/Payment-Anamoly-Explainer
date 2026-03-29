@@ -1,0 +1,15 @@
+# Tutorial pins below; on Python 3.13 / Windows, use wheels (install may upgrade some pins).
+faker==26.0.0
+pandas>=2.2.2,<3
+numpy>=1.26.4,<3
+scikit-learn>=1.5.1
+xgboost==2.1.1
+joblib>=1.4.2
+sentence-transformers==3.0.1
+faiss-cpu>=1.9.0
+langchain>=0.2.14
+langchain-community>=0.2.12
+langchain-groq>=0.1.9
+langchain-huggingface>=0.0.3
+streamlit==1.37.1
+python-dotenv==1.0.1

@@ -11,7 +11,7 @@ This repository is educational: synthetic data, not production fraud scoring.
 1. **Synthetic data** — Generates 500 payment rows (475 “normal” + 25 injected anomalies) to `artifacts/transactions.csv`.
 2. **Anomaly detection** — Trains an **Isolation Forest** (unsupervised) and an **XGBoost** classifier on labeled columns, blends scores, and writes the top-risk rows to `artifacts/flagged_transactions.csv` (27 rows in the default configuration). Model artifacts are saved as `.pkl` under `artifacts/`.
 3. **Knowledge base** — Ten compliance rules live in `knowledge_base/iso20022_rules.md` (markdown, `Rule 001` … `Rule 010`).
-4. **Embeddings + FAISS** — Rules are embedded with `sentence-transformers/all-MiniLM-L6-v2` and indexed with **FAISS** under `artifacts/faiss_index/` (first run downloads the embedding model, roughly tens of MB).
+4. **Embeddings + FAISS** — Rules are embedded with `sentence-transformers/all-MiniLM-L6-v2` and indexed with **FAISS** under `artifacts/faiss_index/` (first run downloads the embedding model).
 5. **RAG explainer** — For a given transaction text, the app retrieves relevant rules and calls **Groq** (`llama-3.1-8b-instant`) to produce three sections: why it was flagged, which rules apply, recommended next steps.
 6. **Dashboard** — **Streamlit** UI to inspect flagged transactions and run the explainer.
 

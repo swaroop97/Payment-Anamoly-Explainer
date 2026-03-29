@@ -148,23 +148,6 @@ Open the URL shown in the terminal (typically `http://localhost:8501`). Pick a f
 
 ---
 
-## Security and privacy
-
-Treat API keys and any local credential files like normal secrets: keep them out of version control and rotate them if leaked.
-
-`artifacts/` is gitignored; regenerate locally after clone if you want the full UI without checking in large CSVs or indices.
-
----
-
-## Troubleshooting
-
-| Issue | What to try |
-|--------|-------------|
-| Authentication errors from Groq | Verify your Groq account and that API access is enabled for the project. |
-| `pip` tries to compile pandas / sklearn | Use Python 3.11–3.12 with wheels, or stay on 3.13 and ensure `requirements.txt` installs binary wheels (`pip install --upgrade pip` first). |
-| Streamlit says run the pipeline first | Run the three `python` steps above so `artifacts/transactions.csv` and `flagged_transactions.csv` exist. |
-| FAISS / embedding first run slow | First run downloads `all-MiniLM-L6-v2`; later runs reuse the cache. |
-
 
 ---
 

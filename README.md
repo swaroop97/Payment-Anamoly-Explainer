@@ -96,7 +96,7 @@ The file allows slightly flexible versions for **pandas**, **scikit-learn**, **f
 
 ---
 
-## Run the pipeline (order matters)
+## Run the pipeline 
 
 From the project root, with the venv activated:
 

@@ -131,7 +131,7 @@ Open the URL shown in the terminal (typically `http://localhost:8501`). Pick a f
 
 ---
 
-## How detection works (short)
+## How detection works
 
 - Features include amount, log-amount, hour, day-of-week, and encodings for payment rail and sender BIC.
 - **Isolation Forest** is fit with contamination tuned so the ensemble targets a fixed number of top-risk rows.
@@ -140,7 +140,7 @@ Open the URL shown in the terminal (typically `http://localhost:8501`). Pick a f
 
 ---
 
-## How RAG works (short)
+## How RAG works
 
 - Each rule block in `iso20022_rules.md` becomes one document chunk.
 - Queries use the same embedding model as at index time; **FAISS** returns the closest rule texts.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -23,13 +24,54 @@ st.caption("Isolation Forest + XGBoost flags · FAISS + Groq compliance explanat
 
 flagged_path = ROOT / "artifacts" / "flagged_transactions.csv"
 tx_path = ROOT / "artifacts" / "transactions.csv"
+faiss_dir = ROOT / "artifacts" / "faiss_index"
 
-if not flagged_path.exists() or not tx_path.exists():
-    st.error(
-        "Run the pipeline first: `python data/generate_transactions.py`, "
-        "`python models/anomaly_detector.py`, `python models/embedder.py`."
+
+def _artifacts_ready() -> bool:
+    if not flagged_path.exists() or not tx_path.exists():
+        return False
+    if not faiss_dir.is_dir() or not any(faiss_dir.iterdir()):
+        return False
+    return True
+
+
+def _run_pipeline_step(label: str, script: str) -> None:
+    rel = ROOT / script
+    proc = subprocess.run(
+        [sys.executable, str(rel)],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
     )
-    st.stop()
+    if proc.returncode != 0:
+        err = (proc.stderr or proc.stdout or "").strip() or f"exit {proc.returncode}"
+        raise RuntimeError(f"{label} failed:\n{err}")
+
+
+if not _artifacts_ready():
+    st.info(
+        "First deploy has no generated files under `artifacts/` (they are gitignored). "
+        "Running the demo pipeline once — this may take a few minutes on first load "
+        "(downloads the embedding model and builds the FAISS index)."
+    )
+    try:
+        with st.status("Building demo artifacts…", expanded=True) as status:
+            st.write("1/3 Synthetic transactions")
+            _run_pipeline_step("Generate transactions", "data/generate_transactions.py")
+            st.write("2/3 Isolation Forest + XGBoost → flagged rows")
+            _run_pipeline_step("Anomaly detection", "models/anomaly_detector.py")
+            st.write("3/3 Embeddings + FAISS index")
+            _run_pipeline_step("Embedder", "models/embedder.py")
+            status.update(label="Demo data ready.", state="complete")
+    except RuntimeError as e:
+        st.error(str(e))
+        st.caption(
+            "Locally you can run the same steps: "
+            "`python data/generate_transactions.py` → `python models/anomaly_detector.py` → "
+            "`python models/embedder.py`."
+        )
+        st.stop()
+    st.rerun()
 
 flagged = pd.read_csv(flagged_path)
 all_tx = pd.read_csv(tx_path)
